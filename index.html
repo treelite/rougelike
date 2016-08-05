@@ -1,0 +1,37 @@
+<!DOCTYPE>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>RougeLike</title>
+    <style>
+        html,body {
+            background: #000;
+            margin: 0;
+        }
+
+        #main {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-left: -320px;
+            margin-top: -240px;
+            width: 640px;
+            height: 480px;
+        }
+    </style>
+    <script src="dep/systemjs/system.js"></script>
+</head>
+<body>
+    <canvas id="main"></canvas>
+    <script>
+    SystemJS.config({
+        defaultJSExtensions: true
+    });
+    SystemJS
+        .import('asset/boot.js')
+        .then(function (boot) {
+            boot.default(document.getElementById('main'))
+        });
+    </script>
+</body>
+</html>
