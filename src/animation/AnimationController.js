@@ -12,7 +12,7 @@ const ANIMATIONS = {
 
 export default class {
 
-    constructor(animations, entry = 'main') {
+    constructor(animations, entry = 'main', tile) {
         this.flows = {};
         let keys = Reflect.ownKeys(animations);
         this.key = entry;
@@ -24,6 +24,10 @@ export default class {
             if (config.next) {
                 animation.on('end', () => this.state = config.next);
             }
+        }
+
+        if (tile) {
+            this.animation.apply(tile);
         }
     }
 

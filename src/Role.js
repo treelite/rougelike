@@ -22,7 +22,7 @@ export default class Role extends Tile {
             active: true
         });
 
-        this.animationController = new AnimationController(frames, keyFrame);
+        this.animationController = new AnimationController(frames, keyFrame, this);
     }
 
     update(deltaTime) {

@@ -48,10 +48,20 @@ export default class SpriteAnimation extends EventEmitter {
         }
         else {
             this.time += deltaTime;
-            let index = Math.floor(this.time / this.dt);
-            let [sx, sy] = this.frames[index % this.frames.length];
-            tile.setImage(this.img, sx, sy);
+            this.apply(tile);
         }
+    }
+
+    /**
+     * 应用当前的动画帧
+     *
+     * @public
+     * @param {Tile} tile Tile
+     */
+    apply(tile) {
+        let index = Math.floor(this.time / this.dt);
+        let [sx, sy] = this.frames[index % this.frames.length];
+        tile.setImage(this.img, sx, sy);
     }
 
     /**
