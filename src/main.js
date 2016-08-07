@@ -6,6 +6,7 @@
 import World from './World';
 import Camera from './Camera';
 import Player from './role/Player';
+import Curation from './ui/Curtain';
 import * as resMgr from './resourceManager';
 import Keyboard from './controller/Keyboard';
 import {
@@ -18,23 +19,36 @@ import {
 let level;
 let player;
 let world;
+let curation;
+let pause = true;
 let controller = new Keyboard();
 
-function init() {
+async function init(ctx) {
     level = 0;
     player = new Player();
     player.on('died', () => {
         controller.disable();
-        console.log('Game Over');
+        curation.fadeIn(`Game Over`);
+        pause = true;
     });
     createWorld();
     controller.enable();
+    curation = new Curation(ctx, SCREEN_WIDTH, SCREEN_HEIGHT, 1);
+    curation.show(`Level ${level}`);
+    await curation.fadeOut(1)
+    pause = false;
 }
 
 function createWorld() {
     world = new World(++level);
     world.set(player, PLAYER_POS_X, PLAYER_POS_Y);
-    world.on('exit', () => setTimeout(createWorld, 300));
+    world.on('exit', async () => {
+        pause = true;
+        await curation.fadeIn(`Level ${level + 1}`);
+        createWorld();
+        await curation.fadeOut(1);
+        pause = false;
+    });
 }
 
 function move(x, y) {
@@ -58,7 +72,7 @@ export default function (ctx) {
         screenHeight: SCREEN_HEIGHT
     });
 
-    init();
+    init(ctx);
 
     // 输入控制
     controller.on('keyup', key => inputHandler.hasOwnProperty(key) && inputHandler[key]());
@@ -72,8 +86,13 @@ export default function (ctx) {
             deltaTime = TIME_DELTA_ST;
         }
 
-        world.update(deltaTime);
+        if (!pause) {
+            world.update(deltaTime);
+        }
         camera.shot(world);
+        if (pause) {
+            curation.render(deltaTime);
+        }
 
         lastRenderTime = now;
         requestAnimationFrame(render);
