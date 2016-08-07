@@ -38,7 +38,7 @@ export default class {
         let eventQueues = allEventQueues.get(this);
         let listeners = eventQueues[event] || [];
         for (let listener of listeners) {
-            listener.call(this, ...args);
+            listener.apply(this, args);
         }
     }
 
@@ -66,12 +66,27 @@ export default class {
     off(event, listener) {
         let eventQueues = allEventQueues.get(this);
         let listeners = eventQueues[event] || [];
-        for (let [index, value] of listeners) {
+        for (let [index, value] of listeners.entries()) {
             if (value === listener) {
-                listeners.split(index, 1);
+                listeners.splice(index, 1);
                 break;
             }
         }
+    }
+
+    /**
+     * 添加只触发一次的事件监听
+     *
+     * @public
+     * @param {string} event 事件名称
+     * @param {Function} listener 事件监听函数
+     */
+    once(event, listener) {
+        let fn = (...args) => {
+            this.off(event, fn);
+            listener.apply(this, args);
+        };
+        this.on(event, fn);
     }
 
     /**
