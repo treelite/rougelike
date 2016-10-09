@@ -9,6 +9,6 @@ $ npm install
 $ npm run build
 ```
 
-And then start a web server and visit the `index.html`
+Then start a web server and visit the `index.html`
 
-![Screenshoot](screenshoot/main.png)
+<img src="screenshoot/main.png" alt="Screenshoot" width="516"></img>
