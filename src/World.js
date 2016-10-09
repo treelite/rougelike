@@ -125,7 +125,9 @@ function drawExit(world) {
 function drawZombies(world) {
     let res = [];
     let zombies;
-    for (let i = 0; i < 2; i++) {
+    let level = world.level;
+    let max = level === 1 ? 1 : Math.round(Math.log(level));
+    for (let i = 0; i < max; i++) {
         zombies = new Zombies();
         world.random(zombies);
         res.push(zombies);
